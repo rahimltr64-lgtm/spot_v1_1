@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "245242854608",
+    "project_id": "spot-7ed0b",
+    "storage_bucket": "spot-7ed0b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:245242854608:android:b00933ba365827e65db2d5",
+        "android_client_info": {
+          "package_name": "com.klencod.compass"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmd1s6LS5In8jb512UOC32sNXJUnjh2Zo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
