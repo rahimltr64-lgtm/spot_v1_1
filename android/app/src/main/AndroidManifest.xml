@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:label="spot"
+        android:label="spot_v1_1"
         android:icon="@drawable/ic_launcher"
         android:theme="@style/NormalTheme">
         <activity
