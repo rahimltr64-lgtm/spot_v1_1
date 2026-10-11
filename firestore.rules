@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function roomPath(roomId) {
+      return /databases/$(database)/documents/rooms/$(roomId);
+    }
+
+    match /rooms/{roomId} {
+      // الكود هو السر: يمكن جلب غرفة بكودها فقط، ولا يمكن سرد كل الغرف
+      allow get: if signedIn();
+      allow list: if false;
+
+      allow create: if signedIn()
+        && roomId.matches('[A-Z0-9]{6}')
+        && request.resource.data.keys().hasOnly(['name', 'creatorId', 'createdAt'])
+        && request.resource.data.creatorId == request.auth.uid
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 40
+        && request.resource.data.createdAt == request.time;
+
+      allow update: if false;
+      allow delete: if signedIn() && resource.data.creatorId == request.auth.uid;
+
+      match /messages/{msgId} {
+        allow read: if signedIn() && exists(roomPath(roomId));
+
+        allow create: if signedIn()
+          && request.resource.data.keys().hasOnly(['text', 'senderId', 'createdAt'])
+          && request.resource.data.senderId == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 500
+          && request.resource.data.createdAt == request.time;
+
+        allow update: if false;
+
+        // صاحب الرسالة أو منشئ الغرفة فقط
+        allow delete: if signedIn()
+          && (resource.data.senderId == request.auth.uid
+              || get(roomPath(roomId)).data.creatorId == request.auth.uid);
+      }
+    }
+  }
+}
